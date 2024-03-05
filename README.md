@@ -7,7 +7,15 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
+## Laravel URL Shortener
+
+This project is made for learning purposes of Laravel development.
+
+### How to run it?
+
+First create env file and put your database credentials. Then do `php artisan migrate` and after succseffuly migration database go `npm install` to install vite dependecies for better development (if u want to work on this project more) after that u can run `npm run dev` and `php artisan serve` for serving client side.
+
+##  About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
