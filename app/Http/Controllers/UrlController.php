@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\DB;
 class UrlController extends Controller
 {
 
+    private $shortener_methods = [
+        'generateShortenedUrl' => 'Random String',
+        'generateShortenedUrlV2' => 'Base58 Encoding'
+    ];
     /**
      * Function that generates a shortened url from a given url
      * @param string $url
@@ -32,10 +36,22 @@ class UrlController extends Controller
 
     }
 
-    function generateShortendUrlV2($ur)
+    function generateShortenedUrlV2($url)
     {
         //using base58 encoding
+        $base58 = new \StephenHill\Base58();
+        $encoded = $base58->encode($url);
 
+        $url_encoded = 'http://localhost:8000/' . $encoded;
+
+        $url = Url::where('shortened_url', $encoded)->first();
+
+        //if the random string already exists, generate a new one
+        if ($url) {
+            return $this->generateShortenedUrlV2($url);
+        }
+        error_log($url_encoded);
+        return $url_encoded;
     }
 
     /**
@@ -45,12 +61,15 @@ class UrlController extends Controller
      */
     public function index()
     {
+
+
+
         $urls = Url::select('url', 'shortened_url', 'expiration_date', 'visits')
                         ->where('expiration_date', '>', date('Y-m-d H:i:s'))
                         ->orderBy('id', 'desc')
-                        ->paginate(10);
+                        ->paginate(5);
 
-        return view('welcome')->with('urls', $urls);
+        return view('welcome')->with(['urls' => $urls, 'shortener_methods' => $this->shortener_methods]);
 
 
     }
@@ -69,17 +88,32 @@ class UrlController extends Controller
 
         try{
             //validate request
+            $selectedShortener = $request->input('shorteners');
+            error_log($selectedShortener);
+            $shortner_function = array_search(
+                $selectedShortener,
+                $this->shortener_methods
+            );
 
-            $this->validate($request, [
-                'url' => 'required'
+            error_log($shortner_function);
+
+            $validate = $this->validate($request, [
+                'url' => 'required',
             ]);
+
+            if (!$validate) {
+                return redirect()->back()->with('error', 'Invalid url');
+            }
+
+
 
             $url = Url::create([
                 'url' => $request->url,
-
-                'shortened_url' => $this->generateShortenedUrl($request->url), //function that creates shortenl url from url
+                'shortened_url' => $this->$shortner_function($request->url), //function that creates shortenl url from url
                 'expiration_date' => date('Y-m-d H:i:s', strtotime('+1 week')) //expiration date is 1 week from now,
             ]);
+
+
             $url->save();
 
             DB::commit();
@@ -89,7 +123,7 @@ class UrlController extends Controller
         }catch(\Exception $e){
 
             DB::rollBack();
-            abort(505);
+            //abort(505);
         }
 
 

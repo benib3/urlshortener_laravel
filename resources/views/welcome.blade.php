@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Laravel</title>
+    <title>URL Shortner</title>
 
     <!-- Fonts -->
     <link href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
@@ -15,7 +15,23 @@
         /*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */
         html {
             line-height: 1.15;
-            -webkit-text-size-adjust: 100%
+            -webkit-text-size-adjust: 100%;
+            /* This will affect the entire document */
+            ::-webkit-scrollbar {
+                width: 10px; /* width of the entire scrollbar */
+            }
+
+            ::-webkit-scrollbar-track {
+                background: #555; /* color of the tracking area */
+            }
+
+            ::-webkit-scrollbar-thumb {
+                background: #e62f2f; /* color of the scroll thumb */
+            }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: #555; /* color of the scroll thumb on hover */
+            }
         }
 
         body {
@@ -79,6 +95,14 @@
 
         .flex {
             display: flex
+        }
+
+        .noise {
+
+            background:
+            radial-gradient(circle at -54% -150%, rgba(17,24,39,1), rgba(17,24,39, 0.8), rgba(163, 23, 23, 0.6)),
+            url(https://grainy-gradients.vercel.app/noise.svg);
+
         }
 
         .grid {
@@ -391,9 +415,9 @@
 </head>
 
 <body class="antialiased">
-    <div class="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center py-4 sm:pt-0 ">
+    <div class="relative noise flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center py-4 sm:pt-0 ">
 
-        <div class="max-w-6xl mx-auto sm:px-6 lg:px-8 ">
+        <div class="max-w-6xl mx-auto sm:px-6 lg:px-8 mt-5 ">
             <div class="flex justify-center pt-8 sm:justify-center sm:pt-0">
                 <svg viewBox="0 0 651 192" fill="none" xmlns="http://www.w3.org/2000/svg"
                     class="h-16 w-auto text-gray-700 sm:h-20">
@@ -423,6 +447,19 @@
                                         name="url"
                                         placeholder="Enter URL"
                                         class="block  w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-red-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
+
+
+
+                                    <label for="shorteners" class="mt-2 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select method to short</label>
+                                    <select name="shorteners" id="shorteners" class="mt-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                        {{-- <option selected>Choose a country</option> --}}
+                                        @foreach ($shortener_methods as $shortener_method)
+                                            <option value="{{ $shortener_method }}">{{ $shortener_method }}</option>
+                                        @endforeach
+
+
+                                    </select>
+
                                     <button type="submit" class="mt-4 w-full bg-red-500 hover:bg-red-700 text-white font-bold py-4 px-4 rounded">Submit</button>
                                     </form>
                                         @if (session('url_generated'))
@@ -441,19 +478,17 @@
             <div class="text-white px-2 m-2 b py-2 sm:rounded-lg">
                  <span class="text-lg">Recently shortened URLs</span>
             </div>
-            {{-- list all urls --}}
-            <div class="flex flex-wrap gap-4 p-6 justify-center text-lg font-serif min-h-screen  dark:bg-gray-800 sm:rounded-lg">
-
+            <div style="width:32rem" class="mt-8 min-w-full overflow-hidden shadow sm:rounded-lg">
                 @foreach ($urls as  $index => $url)
 
-                <div class="relative bg-gray-100 flex-grow text-black border-l-8 border-red-500 rounded-md px-3 py-2 w-full md:w-5/12 lg:w-3/12">
+                <div class="relative bg-gray-100 mt-1 flex-grow text-black border-l-8 border-red-500 rounded-md px-3 py-2 w-full ">
                             <span>{{$url->shortened_url}}</span>
                             <div id="{{ $index }}" data-url="{{ $url->shortened_url }}" class="shortUrl absolute p-2 top-2 right-1 cursor-pointer">
                                 @include('clipboard')
 
                             </div>
 
-                            <div class="text-gray-500 font-thin text-sm pt-1">
+                            <div class="text-gray-500 font-thin text-sm pt-1 overflow-hidden">
                                 <span>{{$url->url}}</span>
                                 <br/>
                                 <span>{{$url->expiration_date}}</span>
@@ -463,8 +498,8 @@
                 </div>
 
                 @endforeach
-
             </div>
+
 
             <div class="mt-1">
                 {{ $urls->links()}}
