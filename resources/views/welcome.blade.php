@@ -194,6 +194,7 @@
             max-width: 72rem
         }
 
+
         .min-h-screen {
             min-height: 100vh
         }
@@ -306,7 +307,10 @@
             grid-template-columns: repeat(1, minmax(0, 1fr))
         }
 
+
+
         @media (min-width:640px) {
+
             .sm\:rounded-lg {
                 border-radius: .5rem
             }
@@ -368,6 +372,9 @@
         }
 
         @media (min-width:1024px) {
+            container-w32{
+                width: 32rem;
+            }
             .lg\:px-8 {
                 padding-left: 2rem;
                 padding-right: 2rem
@@ -429,7 +436,7 @@
             </div>
 
 
-            <div style="width:32rem" class="mt-8  min-w-full bg-white dark:bg-gray-800 overflow-hidden shadow sm:rounded-lg">
+            <div  class="container-w32 mt-8 min-w-full bg-white dark:bg-gray-800 overflow-hidden shadow sm:rounded-lg">
                 <div class="px-4">
                     <div class="p-6">
                         <div class="flex items-center">
@@ -478,7 +485,7 @@
             <div class="text-white px-2 m-2 b py-2 sm:rounded-lg">
                  <span class="text-lg">Recently shortened URLs</span>
             </div>
-            <div style="width:32rem" class="mt-8 min-w-full overflow-hidden shadow sm:rounded-lg">
+            <div class="container-w32 mt-8 min-w-full overflow-hidden shadow sm:rounded-lg">
                 @foreach ($urls as  $index => $url)
 
                 <div class="relative bg-gray-100 mt-1 flex-grow text-black border-l-8 border-red-500 rounded-md px-3 py-2 w-full ">
@@ -499,7 +506,6 @@
 
                 @endforeach
             </div>
-
 
             <div class="mt-1">
                 {{ $urls->links()}}
