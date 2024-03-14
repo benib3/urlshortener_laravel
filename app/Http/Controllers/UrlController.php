@@ -83,27 +83,18 @@ class UrlController extends Controller
     {
 
 
-
         DB::beginTransaction();
 
         try{
             //validate request
             $selectedShortener = $request->input('shorteners');
-            error_log($selectedShortener);
             $shortner_function = array_search(
                 $selectedShortener,
                 $this->shortener_methods
             );
-
-            error_log($shortner_function);
-
-            $validate = $this->validate($request, [
+            $this->validate($request, [
                 'url' => 'required',
             ]);
-
-            if (!$validate) {
-                return redirect()->back()->with('error', 'Invalid url');
-            }
 
 
 
@@ -121,9 +112,18 @@ class UrlController extends Controller
             return redirect()->back()->with('url_generated', $url->shortened_url);
 
         }catch(\Exception $e){
-
             DB::rollBack();
-            //abort(505);
+            //determening the error if its from validation or from the database
+            if (strpos($e->getMessage(), 'SQLSTATE') !== false) {
+                error_log('Database error');
+                return redirect()->back()->with('error', 'Server error.');
+            }else {
+                error_log('Validation error');
+                return redirect()->back()->with('error', 'Invalid url.');
+            }
+
+
+
         }
 
 
@@ -150,21 +150,27 @@ class UrlController extends Controller
     public function show($code)
     {
 
+
         //redirect to real url
         $find_url = Url::where('shortened_url', 'http://localhost:8000/' . $code)->first();
 
-        $find_url->update([
-            'visits' => $find_url->visits + 1,
-            'last_visit' => date('Y-m-d H:i:s')
-        ]);
-
-        $find_url->save();
-
         if ($find_url) {
+
+            $find_url->update([
+                'visits' => $find_url->visits + 1,
+                'last_visit' => date('Y-m-d H:i:s')
+            ]);
+
+            $find_url->save();
+
             return redirect($find_url->url);
-        }else {
+        } else {
             abort(404);
         }
+
+
+
+
 
     }
 

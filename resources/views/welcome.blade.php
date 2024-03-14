@@ -105,6 +105,9 @@
             url(https://grainy-gradients.vercel.app/noise.svg);
 
         }
+        .w-128 {
+            width: 32rem
+        }
 
         .grid {
             display: grid
@@ -446,6 +449,12 @@
 
 
                         <div class="px-4 mt-2 text-gray-600 dark:text-gray-400 text-sm">
+
+                            @if (session('error'))
+
+                                @include('partials.error')
+                            @endif
+
                                 <div class="mb-6">
                                     <form method="POST" action="/">
                                         @csrf
@@ -484,30 +493,29 @@
             <div class="text-white px-2 m-2 b py-2 sm:rounded-lg">
                  <span class="text-lg">Recently shortened URLs</span>
             </div>
-            <div class=" mt-8 min-w-full overflow-hidden shadow sm:rounded-lg">
+            <div class="mt-8 min-w-full overflow-hidden shadow sm:rounded-lg">
                 @foreach ($urls as  $index => $url)
 
-                <div class="relative bg-gray-100 mt-1 flex-grow text-black border-l-8 border-red-500 rounded-md px-3 py-2 w-full ">
-                            <span>{{$url->shortened_url}}</span>
-                            <div id="{{ $index }}" data-url="{{ $url->shortened_url }}" class="shortUrl absolute p-2 top-2 right-1 cursor-pointer">
-                                @include('icons.clipboard')
-
-                            </div>
-
-                            <div class="text-gray-500 font-thin text-sm pt-1 overflow-hidden">
-                                <span class="inline-flex gap-1 justify-center text-align-center">{{$url->url}}</span>
-                                <br/>
-                                <span class="inline-flex gap-1 justify-center text-align-center">
-                                    @include('icons.calendar')
-                                    {{$url->expiration_date}}
-                                </span>
-                                <br/>
-                                <span class="inline-flex gap-1 justify-center text-align-center">
-                                <img width="15rem" height="15rem" src="https://svgsilh.com/svg/481829.svg" alt="Visitors">
-                                    {{$url->visits}}
-                                </span>
-                            </div>
+            <div class="relative bg-gray-100 mt-1 flex-grow text-black border-l-8 border-red-500 rounded-md px-3 py-2 w-128">
+                <span>{{$url->shortened_url}}</span>
+                <div id="{{ $index }}" data-url="{{ $url->shortened_url }}" class="shortUrl absolute p-2 top-2 right-1 cursor-pointer">
+                    @include('icons.clipboard')
                 </div>
+
+                <div class="text-gray-500 font-thin text-sm pt-1 overflow-hidden">
+                    <span class="inline-flex gap-1 justify-center text-align-center">{{$url->url}}</span>
+                    <br/>
+                    <span class="inline-flex gap-1 justify-center text-align-center">
+                        @include('icons.calendar')
+                        {{$url->expiration_date}}
+                    </span>
+                    <br/>
+                    <span class="inline-flex gap-1 justify-center text-align-center">
+                    <img width="15rem" height="15rem" src="https://svgsilh.com/svg/481829.svg" alt="Visitors">
+                        {{$url->visits}}
+                    </span>
+                </div>
+            </div>
 
                 @endforeach
             </div>
