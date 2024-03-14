@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -372,9 +373,7 @@
         }
 
         @media (min-width:1024px) {
-            container-w32{
-                width: 32rem;
-            }
+
             .lg\:px-8 {
                 padding-left: 2rem;
                 padding-right: 2rem
@@ -436,7 +435,7 @@
             </div>
 
 
-            <div  class="container-w32 mt-8 min-w-full bg-white dark:bg-gray-800 overflow-hidden shadow sm:rounded-lg">
+            <div  class="mt-8 min-w-full bg-white dark:bg-gray-800 overflow-hidden shadow sm:rounded-lg">
                 <div class="px-4">
                     <div class="p-6">
                         <div class="flex items-center">
@@ -485,22 +484,28 @@
             <div class="text-white px-2 m-2 b py-2 sm:rounded-lg">
                  <span class="text-lg">Recently shortened URLs</span>
             </div>
-            <div class="container-w32 mt-8 min-w-full overflow-hidden shadow sm:rounded-lg">
+            <div class=" mt-8 min-w-full overflow-hidden shadow sm:rounded-lg">
                 @foreach ($urls as  $index => $url)
 
                 <div class="relative bg-gray-100 mt-1 flex-grow text-black border-l-8 border-red-500 rounded-md px-3 py-2 w-full ">
                             <span>{{$url->shortened_url}}</span>
                             <div id="{{ $index }}" data-url="{{ $url->shortened_url }}" class="shortUrl absolute p-2 top-2 right-1 cursor-pointer">
-                                @include('clipboard')
+                                @include('icons.clipboard')
 
                             </div>
 
                             <div class="text-gray-500 font-thin text-sm pt-1 overflow-hidden">
-                                <span>{{$url->url}}</span>
+                                <span class="inline-flex gap-1 justify-center text-align-center">{{$url->url}}</span>
                                 <br/>
-                                <span>{{$url->expiration_date}}</span>
+                                <span class="inline-flex gap-1 justify-center text-align-center">
+                                    @include('icons.calendar')
+                                    {{$url->expiration_date}}
+                                </span>
                                 <br/>
-                                <span>{{$url->visits}}</span>
+                                <span class="inline-flex gap-1 justify-center text-align-center">
+                                <img width="15rem" height="15rem" src="https://svgsilh.com/svg/481829.svg" alt="Visitors">
+                                    {{$url->visits}}
+                                </span>
                             </div>
                 </div>
 
