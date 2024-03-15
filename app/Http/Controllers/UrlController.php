@@ -13,17 +13,26 @@ class UrlController extends Controller
         'generateShortenedUrl' => 'Random String',
         'generateShortenedUrlV2' => 'Base58 Encoding'
     ];
+
+
     /**
      * Function that generates a shortened url from a given url
      * @param string $url
      * @return string
      */
+
+    private $main_url;
+
+    public function __construct()
+    {
+        $this->main_url = env('APP_URL') ? env('APP_URL') . '/' : 'http://localhost:8000/';
+    }
     function generateShortenedUrl($url)
     {
 
         //generate a random string
         $random_string = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 6);
-        $random_string = 'http://localhost:8000/' . $random_string;
+        $random_string = $this->main_url . $random_string;
         //check if the random string already exists in the database
         $url = Url::where('shortened_url', $random_string)->first();
 
@@ -42,7 +51,7 @@ class UrlController extends Controller
         $base58 = new \StephenHill\Base58();
         $encoded = $base58->encode($url);
 
-        $url_encoded = 'http://localhost:8000/' . $encoded;
+        $url_encoded = $this->main_url . $encoded;
 
         $url = Url::where('shortened_url', $encoded)->first();
 
@@ -152,7 +161,7 @@ class UrlController extends Controller
 
 
         //redirect to real url
-        $find_url = Url::where('shortened_url', 'http://localhost:8000/' . $code)->first();
+        $find_url = Url::where('shortened_url', $this->main_url . $code)->first();
 
         if ($find_url) {
 
