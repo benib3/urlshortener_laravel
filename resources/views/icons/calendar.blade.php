@@ -1,4 +1,4 @@
-<svg class="hover:fill-gray-800"  height="1rem" width="1rem" fill="#000000" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
+<svg class="copy-icon hover:fill-gray-800"  height="1rem" width="1rem" fill="#000000" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 610.398 610.398" xml:space="preserve">
     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
     <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>

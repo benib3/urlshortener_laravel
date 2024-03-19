@@ -5,7 +5,7 @@
      <div class="mt-4 overflow-hidden shadow sm:rounded-lg ">
          @foreach ($urls as $index => $url)
              <div class="relative bg-gray-100 mt-1 flex-grow text-black border-l-8 border-red-500 rounded-md px-3 py-2">
-                 <span class="text-sm sm:text-base">{{ $url->shortened_url }}</span>
+                 <span class="text-sm sm:text-base">{{ \Illuminate\Support\Str::limit($url->shortened_url, 28, '...') }}</span>
                  <div id="{{ $index }}" data-url="{{ $url->shortened_url }}"
                      class="shortUrl absolute p-2 top-2 right-1 cursor-pointer">
                      @include('icons.clipboard')
@@ -37,21 +37,17 @@
 
 
  <script>
-     //copy to clipboard from data-copy-to-clipboard-target
-     var element = document.querySelector('[data-copy-to-clipboard-target]');
-     var defaultIcon = document.getElementById('default-icon');
-     var successIcon = document.getElementById('success-icon');
-     var succesTooltip = document.getElementById('success-tooltip-message');
+    document.querySelectorAll('.shortUrl').forEach(item => {
+            item.addEventListener('click', event => {
+                const url = item.getAttribute('data-url');
+                navigator.clipboard.writeText(url).then(function() {
+                    console.log('Async: Copying to clipboard was successful!');
+                    item.innerHTML = '<span class="text-green-500 font-bold animate__animated animate__fadeInRight ">Copied!<span>';
 
-     element.addEventListener('click', function() {
-         var value = element.getAttribute('data-copy-to-clipboard-target');
-         navigator.clipboard.writeText(value).then(function() {
-             console.log('Async: Copying to clipboard was successful!');
-             defaultIcon.classList.add('hidden');
-             successIcon.classList.remove('hidden');
-             succesTooltip.classList.remove('hidden');
-         }, function(err) {
-             console.error('Async: Could not copy text: ', err);
-         });
-     })
+                }, function(err) {
+                    console.error('Async: Could not copy text: ', err);
+                });
+            })
+    })
+
  </script>
